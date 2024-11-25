@@ -9,7 +9,10 @@
 * {
   margin: 0;
 }
-
+:root {
+  --timing: 400ms;
+  --rotation: 25deg;
+}
 body {
   /* 3. Add accessible line-height */
   line-height: 1.5;
@@ -84,7 +87,7 @@ body {
 }
 .hero-word-1 {
   top: 3rem;
-  right: 20%;
+  left: 20%;
 }
 .hero-word-2 {
   top: 3rem;
@@ -100,7 +103,7 @@ body {
 .hero-word-3 {
   opacity: 0;
   transform: scale(0);
-  transition: opacity 0.65s ease, transform 0.65s;
+  transition: opacity 0.65s cubic-bezier(0,.57,0,1.01), transform 0.65s;
 }
 
 /* Active state */
@@ -108,3 +111,139 @@ body {
   opacity: 1;
   transform: scale(1);
 }
+
+.cards-hover-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px; /* Adjust the value for a stronger/weaker 3D effect */
+}
+.center {
+  display: flex;
+  align-items: center;
+  perspective: 1000px;
+  gap: 3rem;
+  padding: 5rem 20%;
+  background: #16161d;
+}
+.yoda {
+  width: 100%;
+  aspect-ratio: 8 / 12;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: rotate var(--timing) ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yoda img {
+  width: 100%;
+  object-position: center;
+}
+
+.card-title {
+  z-index: 101;
+  position: absolute;
+  font-family: 'Roboto';
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 0px 3px 0px #b2a98f, 0px 14px 10px rgba(0, 0, 0, 0.15),
+    0px 24px 2px rgba(0, 0, 0, 0.1), 0px 34px 30px rgba(0, 0, 0, 0.1);
+}
+
+.yoda:hover {
+  rotate: x var(--rotation);
+}
+
+.yoda::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  background-image: radial-gradient(circle, transparent 150px, black);
+  opacity: 0;
+  transition: opacity var(--timing);
+  border-radius: 15px;
+}
+
+.yoda:hover::before {
+  opacity: 1;
+  border-radius: 15px;
+}
+
+.yoda::after {
+  content: '';
+  position: absolute;
+  inset: 80% 0.5rem 0.5rem;
+  translate: 0;
+  transform: translateZ(-100px);
+  background: #000;
+  filter: blur(1rem);
+  z-index: 1;
+  border-radius: 5px;
+  transition: rotate var(--timing), translate var(--timing);
+}
+
+.yoda:hover::after {
+  rotate: x calc(var(--rotation) * -1);
+  translate: 0 40px;
+  transform-origin: center; 
+  transform-style: preserve-3d; 
+  border-radius: 15px;
+}
+
+.bg-image {
+  position: absolute;
+  z-index: 10;
+  height: 100%;
+  object-fit: cover;
+  object-position: -150px center;
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+  border-radius: 15px;
+}
+
+/* Add compatibility for JS-triggered changes */
+.bg-image[src='images/card-3.jpg'] {
+  object-position: 0 center; /* Adjust position for new image */
+}
+
+.logo,
+.front-image {
+  position: absolute;
+}
+
+.logo {
+  z-index: 1000;
+  width: 65%;
+  margin-inline: auto;
+  inset: auto 0 2rem;
+  transform: translateY(0rem) translateZ(20px);
+  transition: var(--timing);
+}
+
+.yoda:hover .logo {
+  transform: translateY(-1rem) translateZ(20px);
+  rotate: x calc(var(--rotation) * -1);
+}
+
+.front-image {
+  scale: 1.125;
+  transform-origin: bottom;
+  opacity: 0;
+  z-index: 100;
+  transition: var(--timing);
+}
+
+.yoda:hover .front-image {
+  opacity: 1;
+  transform: translateY(-2rem) translateZ(-10px);
+  rotate: x calc(var(--rotation) * -1);
+}
+@media screen and (max-width: 1200px) {
+  .center {
+    padding: 5rem;
+  }
+}
+
